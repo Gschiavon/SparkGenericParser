@@ -3,7 +3,7 @@ package com.datio.genericparser
 import com.datio.genericparser.Outputs.Output
 import com.datio.genericparser.Outputs.Output._
 import com.datio.genericparser.Utils
-import com.datio.genericparser.Utils._
+import com.datio.genericparser.Utils.DataFrameUtils
 import com.typesafe.config.ConfigFactory
 import org.apache.spark.sql.SQLContext
 import org.apache.spark.{SparkConf, SparkContext}
@@ -22,12 +22,12 @@ object GenericParser {
   def main(args: Array[String]): Unit = {
 
      val utils =  Utils.Utils(sc, sQLContext)
-     val dfUtils = new DataframeUtils
-     val (columns, initDf) = utils.read(hdfsInputPath)
+     val dfUtils = new DataFrameUtils
+     val (columns, initDf) = utils.read("/Users/germanschiavonmatteo/desarrollo/mexico/sparkgenericparser/src/main/resources/muestra1872.csv")
 
-     initDf.show(10)
-     Output(initDf).saveParquetModeToHDFS()
 
+    val result = dfUtils.changeDataFrameSchema(initDf)
+    Output(result).saveAvroModeToHDFS()
 
   }
 

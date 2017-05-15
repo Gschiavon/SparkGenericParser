@@ -20,7 +20,7 @@ case class Utils(sparkContext: SparkContext, sQLContext: SQLContext) {
     //      StructField(colName, pairs.get(colName).get, false)
     //    }))
 
-    StructType(columnNames.map(colName => StructField(colName, StringType, false)))
+    StructType(columnNames.map(colName => StructField(colName, StringType, true)))
   }
 
 
@@ -36,7 +36,7 @@ case class Utils(sparkContext: SparkContext, sQLContext: SQLContext) {
   def read(resource: String): (List[String], DataFrame) = {
     val rdd = sparkContext.textFile(resource)
 
-    val header = rdd.first.split(",").to[List]
+    val header = rdd.first.split(",").map(_.toLowerCase).to[List]
 
     val structFields = getStructFields(rdd)
     val schema = buildSchema(header, structFields)
