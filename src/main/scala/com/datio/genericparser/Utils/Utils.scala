@@ -1,51 +1,27 @@
 package com.datio.genericparser.Utils
 
 import org.apache.spark.SparkContext
-import org.apache.spark.rdd.RDD
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.{DataFrame, Row, SQLContext}
 
-import scala.util.{Failure, Success, Try}
+
+case class Utils(sparkContext: SparkContext, sQLContext: SQLContext) extends Serializable {
 
 
-case class Utils(sparkContext: SparkContext, sQLContext: SQLContext) {
-
-
-  def buildSchema(columnNames: List[String], structFields: List[DataType]): StructType = {
-
-
-    val pairs = (for ((m, a) <- (columnNames zip structFields)) yield (m, a)).toMap
-
-    //    StructType(columnNames.map(colName => {
-    //      StructField(colName, pairs.get(colName).get, false)
-    //    }))
-
+  def buildSchema(columnNames: List[String]): StructType = {
     StructType(columnNames.map(colName => StructField(colName, StringType, true)))
   }
 
 
-  def getStructFields(rdd: RDD[String]): List[DataType] = {
-    val sample = rdd
-      .take(2)
-      .drop(1)
-      .map(_.split(",").toList)
-
-    inferDataTypes(sample)
-  }
-
   def read(resource: String): (List[String], DataFrame) = {
     val rdd = sparkContext.textFile(resource)
 
-    val header = rdd.first.split(",").map(_.toLowerCase).to[List]
-
-    val structFields = getStructFields(rdd)
-    val schema = buildSchema(header, structFields)
-
-
+    val header = rdd.first.split("\\|").map(_.toLowerCase).to[List]
+    val schema = buildSchema(header)
     val data =
       rdd
         .mapPartitionsWithIndex((i, it) => if (i == 0) it.drop(1) else it)
-        .map(_.split(",").toList)
+        .map(line => line.split("\\|", -1).toList)
         .map(lines => Row(lines.map(line => line): _*))
 
     val dataFrame =
@@ -54,49 +30,11 @@ case class Utils(sparkContext: SparkContext, sQLContext: SQLContext) {
     (header, dataFrame)
   }
 
-  /**
-    *
-    * @param data List of values of the CSV
-    * @return a List with type values for DataFrames (StringType, IntegerType, DoubleType)
-    */
-
-  def inferDataTypes(data: Array[List[String]]): List[DataType] = {
-
-    for {
-      value <- data(0)
-    } yield stringToStructField(value)
-
-  }
-
-
-  /**
-    *
-    * @param field from the CSV
-    * @return DataFrame Structfield type
-    */
-  def stringToStructField(field: String): DataType = {
-
-    if(field.contains(".")){
-      if(field.contains(",")) {
-        Try(field.replace(",","").toDouble)
-        match {
-          case Success(value) => DoubleType
-          case Failure(_) => StringType
-        }
-      } else {
-        Try(field.toDouble)
-        match {
-          case Success(value) => DoubleType
-          case Failure(_) => StringType
-        }
-      }
-    } else {
-      Try(field.toInt)
-      match {
-        case Success(value) => IntegerType
-        case Failure(_) => StringType
-      }
-    }
+  def parseSaldo(saldo: String): String = {
+    val regex = "[0-9],[0-9][0-9][0-9].[0-9][0-9]"
+    if(saldo.matches(regex))
+      saldo.replace(",","")
+    else saldo
   }
 
 }

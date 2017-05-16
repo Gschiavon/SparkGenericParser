@@ -9,14 +9,14 @@ import org.apache.spark.sql.functions.udf
 class DataFrameUtils {
 
   val stringToInt = udf { (value: Any) =>
-    if(value != null && !value.equals("?"))
+    if(!value.equals(""))
       value.toString.toInt
     else
       0
   }
 
   val stringToLong = udf {(value: Any) =>
-    if(value != null && !value.equals("?"))
+    if(!value.equals(""))
       value.toString.toLong
     else
       0L
@@ -33,7 +33,6 @@ class DataFrameUtils {
       .withColumn("ix_cross_border", stringToInt(dataFrame("ix_cross_border")))
       .withColumn("tp_pos_entry_mode1", stringToInt(dataFrame("tp_pos_entry_mode1")))
       .withColumn("tp_pos_entry_mode2", stringToInt(dataFrame("tp_pos_entry_mode2")))
-      .withColumn("tp_libre_5", stringToInt(dataFrame("tp_libre_5")))
       .withColumn("cd_retorno", stringToInt(dataFrame("cd_retorno")))
       .withColumn("cd_razon_ret", stringToInt(dataFrame("cd_razon_ret")))
       .withColumn("cd_operacion", stringToInt(dataFrame("cd_operacion")))
@@ -44,11 +43,24 @@ class DataFrameUtils {
 
   }
 
-  def changeCdGiro(dataFrame: DataFrame): DataFrame = {
-    dataFrame
-      .select("cd_giro")
+  def tableForAnalytics(dataFrame: DataFrame): DataFrame = {
+   dataFrame
+      .withColumn("cd_tarjeta", stringToLong(dataFrame("cd_tarjeta")))
+      .withColumn("nu_bin_tarjeta", stringToInt(dataFrame("nu_bin_tarjeta")))
       .withColumn("cd_giro", stringToInt(dataFrame("cd_giro")))
+      .withColumn("ix_cross_border", stringToInt(dataFrame("ix_cross_border")))
+      .withColumn("tp_pos_entry_mode1", stringToInt(dataFrame("tp_pos_entry_mode1")))
+      .withColumn("tp_pos_entry_mode2", stringToInt(dataFrame("tp_pos_entry_mode2")))
+      .withColumn("cd_retorno", stringToInt(dataFrame("cd_retorno")))
+      .withColumn("cd_razon_ret", stringToInt(dataFrame("cd_razon_ret")))
+      .withColumn("cd_operacion", stringToInt(dataFrame("cd_operacion")))
+      .withColumn("tp_mensaje", stringToInt(dataFrame("tp_mensaje")))
+      .withColumn("nu_afiliacion", stringToInt(dataFrame("nu_afiliacion")))
+      .withColumn("tp_cuenta", stringToInt(dataFrame("tp_cuenta")))
+      .withColumn("tp_cuenta_destino", stringToInt(dataFrame("tp_cuenta_destino")))
+
   }
+
 }
 
 

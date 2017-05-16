@@ -23,11 +23,14 @@ object GenericParser {
 
      val utils =  Utils.Utils(sc, sQLContext)
      val dfUtils = new DataFrameUtils
-     val (columns, initDf) = utils.read("/Users/germanschiavonmatteo/desarrollo/mexico/sparkgenericparser/src/main/resources/muestra1872.csv")
+     val (columns, initDf) = utils.read("/Users/germanschiavonmatteo/desarrollo/mexico/sparkgenericparser/src/main/resources/muestra_teradata.csv")
 
 
-    val result = dfUtils.changeDataFrameSchema(initDf)
-    Output(result).saveAvroModeToHDFS()
+    initDf.show
+    val result = dfUtils.tableForAnalytics(initDf)
+    result.show
+    result.printSchema
+   // Output(result).saveAvroModeToHDFS()
 
   }
 

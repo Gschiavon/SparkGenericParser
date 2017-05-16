@@ -7,10 +7,15 @@ object Testing {
   def main(args: Array[String]): Unit = {
 
 
-    val p = "   .select(\"CD_TARJETA\", \"NU_BIN_TARJETA\", \"CD_GIRO\",\"IX_CROSS_BORDER\", \"TP_POS_ENTRY_MODE1\", \"TP_POS_ENTRY_MODE2\"\n           ,\"TP_LIBRE_5\", \"CD_RETORNO\", \"CD_RAZON_RET\",\"CD_OPERACION\", \"TP_MENSAJE\", \"IM_TRANSACCION\",\"CD_CANAL\", \"FH_OPERACION\", \"TP_ECI\")\n       .withColumn(\"CD_TARJETA\", stringToLong(dataFrame(\"CD_TARJETA\")))\n       .withColumn(\"NU_BIN_TARJETA\", stringToInt(dataFrame(\"NU_BIN_TARJETA\")))\n       .withColumn(\"CD_GIRO\", stringToInt(dataFrame(\"CD_GIRO\")))\n       .withColumn(\"IX_CROSS_BORDER\", stringToInt(dataFrame(\"IX_CROSS_BORDER\")))\n       .withColumn(\"TP_POS_ENTRY_MODE1\", stringToInt(dataFrame(\"TP_POS_ENTRY_MODE1\")))\n       .withColumn(\"TP_POS_ENTRY_MODE2\", stringToInt(dataFrame(\"TP_POS_ENTRY_MODE2\")))\n       .withColumn(\"TP_LIBRE_5\", stringToInt(dataFrame(\"TP_LIBRE_5\")))\n       .withColumn(\"CD_RETORNO\", stringToInt(dataFrame(\"CD_RETORNO\")))\n       .withColumn(\"CD_RAZON_RET\", stringToInt(dataFrame(\"CD_RAZON_RET\")))\n       .withColumn(\"CD_OPERACION\", stringToInt(dataFrame(\"CD_OPERACION\")))\n       .withColumn(\"TP_MENSAJE\", stringToInt(dataFrame(\"TP_MENSAJE\")))"
+  val df = "01/01/2017|10/01/2017|65|65|74|357|29|65|4152310000000065|415231|65||357|VD|AAMM|74|357|44|59299172|1474|14740000|||74|357|1200|1|20|0|0|0|0|6687|07/01/2017|115918|600|MXP|600|MXP|0|0|09/01/2017||07/01/2017|115918|1474|74|N|N|OBBV|560207|623|CAJE|N|||20|P|D|N|MX|||14740000|07/01/2017 11:59|1||0|5||||||5|53.63|0|14/04/2015|1|||||0|0|99|1|0|10/01/2017||Retiro cajero||0|0|0|01/01/0001||0|0|0|0||||||||||||||||||||||0|0|||0||0|0|0||0|||0||0|013B|484|484|07/01/2017|1|14|51|5|1||||0001-01-01|0001-01-01|0001-01-01|||||||"
 
+    val elements = df.split("\\|", -1).toList
 
-    println(p.toLowerCase)
+    for(elem <- elements){
+      println(elem)
+    }
+    println(elements.size)
+
   }
 
 }

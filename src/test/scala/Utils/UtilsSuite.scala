@@ -9,9 +9,9 @@ import org.scalatest.{Matchers, WordSpec}
 
 class UtilsSuite extends WordSpec with Matchers {
 
-  val sc = new SparkContext(new SparkConf().setAppName("Test").setMaster("local[*]"))
-  val sQLContext = new SQLContext(sc)
-  val utils = new Utils(sc, sQLContext)
+//  val sc = new SparkContext(new SparkConf().setAppName("Test").setMaster("local[*]"))
+//  val sQLContext = new SQLContext(sc)
+//  val utils = new Utils(sc, sQLContext)
 
 //  "checkDataTypes" should {
 //
@@ -37,7 +37,7 @@ class UtilsSuite extends WordSpec with Matchers {
 //    }
 //  }
 
-  "stringToStructField" should {
+ /* "stringToStructField" should {
 
     "Testing it with a Double " in {
       val data = "25.99"
@@ -81,7 +81,7 @@ class UtilsSuite extends WordSpec with Matchers {
 
    }
 
-
+*/
 
 
 }
